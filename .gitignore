@@ -2,3 +2,5 @@ config.json
 .env
 credentials.json
 node_modules/
+
+rent-table.js

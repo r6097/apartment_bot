@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
+const { google_sheet_link } = require('../config.json')
+const { getTable } = require('../rent-table.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -36,15 +38,12 @@ module.exports = {
                 temp.push(values[0][0])
             });
             
-            const output = 
-            `╔═════════╦═════════╗\n║ Brandon ║ ${temp[0]} ║\n╠═════════╬═════════╣\n║ James   ║ ${temp[1]} ║\n╠═════════╬═════════╣\n║ Nathan  ║ ${temp[2]} ║\n╠═════════╬═════════╣\n║ Robert  ║ ${temp[3]} ║\n╠═════════╬═════════╣\n║ Weimen  ║ ${temp[4]} ║\n╠═════════╬═════════╣\n║ Yen     ║ ${temp[5]} ║\n╚═════════╩═════════╝`;
-
             const embedResponse = new EmbedBuilder()
                 .setColor(0X9900FF)
                 .setTitle(`🙀 Rent Dues for ${monthName} ${yearName}!! 🙀`)
-                .setURL('https://docs.google.com/spreadsheets/d/1EiiR4190q2mqJDlTvUZOtsBbMGfea5eiheyET-0YUNQ/edit#gid=1930706445')
+                .setURL(`${google_sheet_link}`)
                 .setDescription(
-                    "```" + `${output}` + "```"
+                    "```" + `${getTable(temp)}` + "```"
                 );
 
             channel.send({ embeds: [embedResponse] })
