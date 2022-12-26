@@ -4,8 +4,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('date')
 		.setDescription('Returns numeral 1 to 31'),
-	async execute(client, channel, nteraction) {
-        let today = new Date().getDate();
+	async execute(client, channel, interaction) {
+		const today = new Date().getDate();
 		await interaction.reply(`${today}`);
 	},
 };

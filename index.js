@@ -1,14 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token, guildId, generalChannel, spreadsheet_id } = require('./config.json');
+// Load keys/ids related to discord bot application and google api
+require('dotenv').config();
+
 // load cron jobs
-var cron = require("cron");
-const { rentReminder } = require('./jobs.js')
-// for using google api
-const {google} = require('googleapis');
-const {authenticate} = require('@google-cloud/local-auth');
-const sheets = google.sheets('v4');
+const cron = require('cron');
+const { rentReminder } = require('./jobs.js');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -24,8 +22,9 @@ for (const file of commandFiles) {
 	// Set a new item in the Collection with the key as the command name and the value as the exported module
 	if ('data' in command && 'execute' in command) {
 		client.commands.set(command.data.name, command);
-		console.log(`[LOADED] ${command.data.name}`)
-	} else {
+		console.log(`[LOADED] ${command.data.name}`);
+	}
+	else {
 		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 	}
 }
@@ -35,19 +34,19 @@ for (const file of commandFiles) {
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 
-    // Periodically send rent reminder if:
-    // 1) is due in seven days or sooner AND
-    // 2) at 10AM and 6PM, pinging everyone
-    let checkRentDues = new cron.CronJob('0 0 10,18 * * *', () => {
-        const guild = client.guilds.cache.get(guildId);
-        const channel = guild.channels.cache.get(generalChannel);
-        rentReminder(channel);
-    })
+	// Periodically send rent reminder if:
+	// 1) is due in seven days or sooner AND
+	// 2) at 10AM and 6PM, pinging everyone
+	const checkRentDues = new cron.CronJob('0 0 10,18 * * *', () => {
+		const guild = client.guilds.cache.get(process.env.GUILD_ID);
+		const channel = guild.channels.cache.get(process.env.GENERAL_CHANNEL);
+		rentReminder(channel);
+	});
 
-    checkRentDues.start()
+	checkRentDues.start();
 });
 
-// Handle interaction 
+// Handle interaction
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
@@ -59,29 +58,15 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		const guild = client.guilds.cache.get(guildId);
-        const channel = guild.channels.cache.get(generalChannel);
+		const guild = client.guilds.cache.get(process.env.GUILD_ID);
+		const channel = guild.channels.cache.get(process.env.GENERAL_CHANNEL);
 		await command.execute(client, channel, interaction);
-	} catch (error) {
+	}
+	catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
 
-// Google Spreadsheet API
-(async () => {
-	const auth = await authenticate({
-		keyfilePath: path.join(__dirname, './credentials.json'),
-		scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly'
-	});
-	google.options({auth});
-
-	client.auth = auth;
-	client.googleSheets = sheets.spreadsheets;
-	client.spreadsheetId = spreadsheet_id;
-})();
-
-
-
 // Log in to Discord with your client's token
-client.login(token);
+client.login(process.env.TOKEN);

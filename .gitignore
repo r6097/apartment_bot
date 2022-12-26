@@ -1,6 +1,5 @@
-config.json
 .env
-credentials.json
 node_modules/
 
+# functions with sensitive info
 rent-table.js
