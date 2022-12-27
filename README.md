@@ -10,4 +10,6 @@ A discord bot that helps manage the apartment I live in. Commands are tailored t
 ---
 ## Quick Links
 [https://discord.com/developers/applications](https://discord.com/developers/applications)\
-[https://discord.js.org/#/](https://discord.js.org/#/)
+[https://discord.js.org/#/](https://discord.js.org/#/)\
+[Replit Link](https://replit.com/@RobertAu/apartmentbot)\
+[UptimeRobot](https://uptimerobot.com/dashboard)

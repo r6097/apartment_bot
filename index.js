@@ -8,6 +8,17 @@ require('dotenv').config();
 const cron = require('cron');
 const { rentReminder } = require('./jobs.js');
 
+// Web server stuff -- for UptimeRobot
+const express = require('express');
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => res.send('I\'m alive!'));
+
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+
+// Discord Bot Code
+
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 

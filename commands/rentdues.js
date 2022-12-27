@@ -92,7 +92,7 @@ module.exports = {
 				.setTitle(`🙀 Rent Dues for ${monthName} ${yearName}!! 🙀`)
 				.setURL(`${process.env.SHEET_LINK}`)
 				.setDescription(
-					'```' + `${getTable(rentDuesResult)}` + '```',
+					'```' + `${getTable(rentDuesResult, process.env.ROOMMATES.split(','))}` + '```',
 				);
 
 			channel.send({ embeds: [embedResponse] });
