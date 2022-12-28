@@ -15,7 +15,9 @@ const port = 3000;
 
 app.get('/', (req, res) => res.send('I\'m alive!'));
 
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+app.listen(port, () =>
+	console.log(`Example app listening at http://localhost:${port}`),
+);
 
 // Discord Bot Code
 
@@ -25,7 +27,9 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 // Load the commands
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandFiles = fs
+	.readdirSync(commandsPath)
+	.filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
@@ -36,29 +40,37 @@ for (const file of commandFiles) {
 		console.log(`[LOADED] ${command.data.name}`);
 	}
 	else {
-		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		console.log(
+			`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`,
+		);
 	}
 }
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
-client.once(Events.ClientReady, c => {
+client.once(Events.ClientReady, (c) => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 
 	// Periodically send rent reminder if:
 	// 1) is due in seven days or sooner AND
 	// 2) at 10AM and 6PM, pinging everyone
-	const checkRentDues = new cron.CronJob('0 0 10,18 * * *', () => {
-		const guild = client.guilds.cache.get(process.env.GUILD_ID);
-		const channel = guild.channels.cache.get(process.env.GENERAL_CHANNEL);
-		rentReminder(channel);
-	});
+	const checkRentDues = new cron.CronJob(
+		'0 0 10,18 * * *',
+		() => {
+			const guild = client.guilds.cache.get(process.env['GUILD_ID']);
+			const channel = guild.channels.cache.get(process.env['GENERAL_CHANNEL']);
+			rentReminder(channel);
+		},
+		null,
+		true,
+		'America/New_York',
+	);
 
 	checkRentDues.start();
 });
 
 // Handle interaction
-client.on(Events.InteractionCreate, async interaction => {
+client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = interaction.client.commands.get(interaction.commandName);
@@ -69,15 +81,23 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		const guild = client.guilds.cache.get(process.env.GUILD_ID);
-		const channel = guild.channels.cache.get(process.env.GENERAL_CHANNEL);
+		const guild = client.guilds.cache.get(process.env['GUILD_ID']);
+		const channel = guild.channels.cache.get(process.env['GENERAL_CHANNEL']);
 		await command.execute(client, channel, interaction);
 	}
 	catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		await interaction.reply({
+			content: 'There was an error while executing this command!',
+			ephemeral: true,
+		});
 	}
 });
 
+// Debug for discord client
+client.on('debug', console.log).on('warning', console.log);
+
+// Handle Discord rate limit from using shared IP
+
 // Log in to Discord with your client's token
-client.login(process.env.TOKEN);
+client.login(process.env['TOKEN']);

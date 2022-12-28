@@ -11,6 +11,18 @@ const d = new Date();
 const monthName = monthFull[d.getMonth()];
 const yearName = d.getFullYear();
 
+// Create an alias to the fetch() function with a dynamic import
+// See https://github.com/node-fetch/node-fetch#commonjs
+const fetch = function(...args) {
+	// Return a import promise
+	return import('node-fetch')
+		.then(function(module) {
+			// Importing the default function: https://dmitripavlutin.com/ecmascript-modules-dynamic-import/#22-importing-of-default-export
+			// Return the fetch promise with the supplied arguments
+			return module.default(...args);
+		});
+};
+
 /**
  * Fetch from Google Spreadsheets API for the cell's column who matches the payment period (the first match)
  * @returns {*} False - If no data is found in the response, otherwise
@@ -18,7 +30,7 @@ const yearName = d.getFullYear();
  *              0 - In case of error during api call
  */
 async function getPaymentPeriod() {
-	const target_url = ENDPOINT + process.env.SPREADSHEET_ID + '/values/2023_Bills!1:1?key=' + process.env.API_KEY;
+	const target_url = ENDPOINT + process.env['SPREADSHEET_ID'] + '/values/2023_Bills!1:1?key=' + process.env['API_KEY'];
 	const targetPaymentPeriod = monthName + ' ' + yearName;
 	// console.log(target_url)
 	try {
@@ -60,7 +72,7 @@ async function getRentDues(paymentColumn) {
 	const ranges = getRanges(paymentColumn);
 
 	for (const r of ranges) {
-		const target_url = ENDPOINT + process.env.SPREADSHEET_ID + '/values/' + r + '?key=' + process.env.API_KEY;
+		const target_url = ENDPOINT + process.env['SPREADSHEET_ID'] + '/values/' + r + '?key=' + process.env['API_KEY'];
 		const res = await fetch(target_url);
 		promises.push(res.json());
 	}
@@ -90,13 +102,13 @@ module.exports = {
 			const embedResponse = new EmbedBuilder()
 				.setColor(0X9900FF)
 				.setTitle(`🙀 Rent Dues for ${monthName} ${yearName}!! 🙀`)
-				.setURL(`${process.env.SHEET_LINK}`)
+				.setURL(`${process.env['SHEET_LINK']}`)
 				.setDescription(
-					'```' + `${getTable(rentDuesResult, process.env.ROOMMATES.split(','))}` + '```',
+					'```' + `${getTable(rentDuesResult, process.env['ROOMMATES'].split(','))}` + '```',
 				);
 
 			channel.send({ embeds: [embedResponse] });
-			channel.send(`Link: ${process.env.APARTMENT_LOGIN_LINK}`);
+			channel.send(`Link: ${process.env['APARTMENT_LOGIN_LINK']}`);
 			channel.send('IMPORTANT: These show what you should pay-- If you paid already you are fine!');
 			await interaction.reply('meow');
 		}
