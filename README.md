@@ -67,11 +67,21 @@ if (lastDay - today < 7) {
 The bot uses the Google Sheets API through the protocols described in https://developers.google.com/sheets/api/samples/reading
 
 1. The bot finds the target payment period column with one get request.
-  - `const target_url = ENDPOINT + process.env.SPREADSHEET_ID + '/values/2023_Bills!1:1?key=' + process.env.API_KEY;`
+    - `const target_url = ENDPOINT + process.env.SPREADSHEET_ID + '/values/{your spreadsheet tab name}!{the range your target cell is in}?key=' + process.env.API_KEY;`
 3. The bot finds the amount due with a batch of get requests.
+    - You should make a `rent-table.js` that performs function `getRanges`.
 
-You need to make a `rent-table.js` that performs functions `getRanges`.
-TODO
+	```js
+	const getRanges = (paymentColumn) => {
+	 	return (
+			[`2023_Bills!${paymentColumn}7`, `2023_Bills!${paymentColumn}11`, `2023_Bills!${paymentColumn}19`, 
+			`2023_Bills!${paymentColumn}23`, `2023_Bills!${paymentColumn}27`, `2023_Bills!${paymentColumn}31`]
+		);
+	};
+	```
+    - The numbers after `${paymentColumn}` represent the row for each roommate.
+    - Use the same protocol in (1), but with these ranges.
+
 
 ## Set up
 1. Install dependencies\
