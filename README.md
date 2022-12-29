@@ -37,13 +37,40 @@ This assumes that you have a Discord bot set up beforehand and a project on Goog
 ### Rent Reminder Config
 > The reminder is currently scheduled to be sent at 10:00 and 18:00.
 
-- To change the hours when the bot sends the rent reminder, edit line 58 inside the callback function that runs the cron job, in `index.js`.
+- To change the hours when the bot sends the rent reminder, edit the cron job in `index.js`.
+```js
+const checkRentDues = new cron.CronJob(
+	'0 0 10,18 * * *',
+	() => {
+		const guild = client.guilds.cache.get(process.env['GUILD_ID']);
+		const channel = guild.channels.cache.get(process.env['GENERAL_CHANNEL']);
+		rentReminder(channel);
+	},
+	null,
+	true,
+	'America/Los_Angeles',
+);
+```
 
 > The rent reminder is only sent when the current day is a week (7) away from the due date, or less.
 
-- To change the days when it can send the reminder, edit line 13 in the rentReminder function in `jobs.js`.
+- To change the days when it can send the reminder, edit the rentReminder function in `jobs.js`.
+```js
+if (lastDay - today < 7) {
+	channel.send('@everyone! Rent is due soon!');
+	channel.send(`Link: ${process.env.APARTMENT_LOGIN_LINK}`);
+	channel.send('Check your amount due with `\\rentdues`');
+}
+```
 ---
-### Configure your spreadsheet
+### Reading your spreadsheet
+The bot uses the Google Sheets API through the protocols described in https://developers.google.com/sheets/api/samples/reading
+
+1. The bot finds the target payment period column with one get request.
+  - `const target_url = ENDPOINT + process.env.SPREADSHEET_ID + '/values/2023_Bills!1:1?key=' + process.env.API_KEY;`
+3. The bot finds the amount due with a batch of get requests.
+
+You need to make a `rent-table.js` that performs functions `getRanges`.
 TODO
 
 ## Set up
