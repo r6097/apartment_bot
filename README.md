@@ -2,11 +2,19 @@
 A discord bot that helps manage the apartment I live in. It is built using the Discord and Google APIs to transmit data from a spreadsheet to a discord server. It sends a reminder to the discord server when rent is due in a week or less.
 
 ## Commands
-Its commands are tailored to access a spreadsheet of particular format.
+Its commands are tailored to access a spreadsheet of particular format. If modifying this, make sure to change the fields to match your spreadsheet.
 
-`/ping`\
-`/date`\
-`/rentdues`
+- `/ping` - Check if the bot is responsive.
+- `/date` - Returns the current date.
+- `/rentdues` - Returns a table containing the amount needed to pay for the current month's rent.
+
+## Jobs
+This Discord bot also performs scheduled jobs via the [node-cron](https://github.com/kelektiv/node-cron) package.
+
+| Function | Description | Schedule |
+|----------|-------------|----------|
+|`rentReminder`| Messages the `GENERAL_CHANNEL` to pay rent. | Within 7 days of end of month, at 10:00 and 18:00 |
+
 
 ## Configuration
 This assumes that you have a Discord bot set up beforehand and a project on Google Cloud Console. I followed this [guide](https://www.freecodecamp.org/news/create-a-discord-bot-with-javascript-nodejs/). Its keys/ids are stored in an `.env` file.
@@ -26,6 +34,7 @@ This assumes that you have a Discord bot set up beforehand and a project on Goog
  *: These values are not vital for function.
  
 ---
+### Rent Reminder Config
 > The reminder is currently scheduled to be sent at 10:00 and 18:00.
 
 - To change the hours when the bot sends the rent reminder, edit line 58 inside the callback function that runs the cron job, in `index.js`.
@@ -33,8 +42,8 @@ This assumes that you have a Discord bot set up beforehand and a project on Goog
 > The rent reminder is only sent when the current day is a week (7) away from the due date, or less.
 
 - To change the days when it can send the reminder, edit line 13 in the rentReminder function in `jobs.js`.
-
-###Configure your spreadsheet
+---
+### Configure your spreadsheet
 TODO
 
 ## Set up
