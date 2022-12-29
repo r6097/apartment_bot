@@ -63,7 +63,7 @@ client.once(Events.ClientReady, (c) => {
 		},
 		null,
 		true,
-		'America/New_York',
+		'America/Los_Angeles',
 	);
 
 	checkRentDues.start();
