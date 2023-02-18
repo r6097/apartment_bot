@@ -12,12 +12,12 @@ function rentReminder(channel) {
 
 	if (lastDay - today < 7) {
 		channel.send('@everyone meow meow, rent is due soon!');
-		channel.send(`Link: ${process.env.APARTMENT_LOGIN_LINK}`);
+		channel.send(`Link: ${process.env['APARTMENT_LOGIN_LINK']}`);
 		channel.send('check your amount due with `\\rentdues`');
 	}
 
 }
 
 module.exports = {
-	rentReminder,
+	rentReminder
 };

@@ -14,7 +14,16 @@
     "cron": "^2.1.0",
     "discord.js": "^14.6.0",
     "dotenv": "^16.0.3",
+<<<<<<< Updated upstream
     "express": "^4.18.2"
+=======
+    "embed-table": "^4.2.1",
+    "express": "^4.18.2",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^110.0.0",
+    "node-fetch": "^2.6.7",
+    "typescript": "^4.9.4"
+>>>>>>> Stashed changes
   },
   "devDependencies": {
     "eslint": "^8.28.0",
