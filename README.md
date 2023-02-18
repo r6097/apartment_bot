@@ -64,10 +64,10 @@ if (lastDay - today < 7) {
 ```
 ---
 ### Reading your spreadsheet
-The bot uses the Google Sheets API through the protocols described in https://developers.google.com/sheets/api/samples/reading
+The bot is linked to a Google Cloud service account that allows us to integrate Google Cloud APIs.
 
-1. The bot finds the target payment period column with one get request.
-    - `const target_url = ENDPOINT + process.env.SPREADSHEET_ID + '/values/{your spreadsheet tab name}!{the range your target cell is in}?key=' + process.env.API_KEY;`
+1. TODO: Update Google api 
+    - ``
 3. The bot finds the amount due with a batch of get requests.
     - You should make a `rent-table.js` that performs function `getRanges`.
 
