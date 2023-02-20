@@ -29,12 +29,7 @@ const fetch = function(...args) {
  * @returns {*} {False} If no data is found in the response, otherwise
  *              {String} Single character representing the column of the payment period
  */
-<<<<<<< Updated upstream
-async function getPaymentPeriod() {
-	const target_url = ENDPOINT + process.env['SPREADSHEET_ID'] + '/values/2023_Bills!1:1?key=' + process.env['API_KEY'];
-=======
 async function getPaymentPeriod(jwtClient) {
->>>>>>> Stashed changes
 	const targetPaymentPeriod = monthName + ' ' + yearName;
   
   const request = {
@@ -72,32 +67,6 @@ async function getPaymentPeriod(jwtClient) {
  * @returns {*} {False} If no data is found in the response, otherwise
  *              {Array} Array of strings representing rent dues
  */
-<<<<<<< Updated upstream
-async function getRentDues(paymentColumn) {
-	// Google Spreadsheet v4 batchGet api is not playing nice :c
-	// Workaround is to do a do a batch of get requests bundled
-	const promises = [];
-
-	const ranges = getRanges(paymentColumn);
-
-	for (const r of ranges) {
-		const target_url = ENDPOINT + process.env['SPREADSHEET_ID'] + '/values/' + r + '?key=' + process.env['API_KEY'];
-		const res = await fetch(target_url);
-		promises.push(res.json());
-	}
-
-	// Holds output of fufilled promises
-	const fufills = [];
-
-	await Promise.all(promises).then((data) => {
-		data.forEach((o) => {
-			fufills.push(o.values[0][0]);
-		});
-	});
-
-	console.log('[getRentDues] :', JSON.stringify(fufills, 0, 2));
-	return fufills;
-=======
 async function getRentDues(paymentColumn, jwtClient) {
   
 	const batch = [`2023_Bills!${paymentColumn}7`,
@@ -132,7 +101,6 @@ async function getRentDues(paymentColumn, jwtClient) {
     console.log(err)
   }
   
->>>>>>> Stashed changes
 }
 
 module.exports = {
@@ -149,13 +117,7 @@ module.exports = {
 				.setColor(0X9900FF)
 				.setTitle(`🙀 Rent Dues for ${monthName} ${yearName}!! 🙀`)
 				.setURL(`${process.env['SHEET_LINK']}`)
-<<<<<<< Updated upstream
-				.setDescription(
-					'```' + `${getTable(rentDuesResult, process.env['ROOMMATES'].split(','))}` + '```',
-				);
-=======
 				.setFields(table);
->>>>>>> Stashed changes
 
 			channel.send({ embeds: [embedResponse] });
 			channel.send(`Link: ${process.env['APARTMENT_LOGIN_LINK']}`);
