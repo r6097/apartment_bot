@@ -5,8 +5,9 @@ A discord bot that helps manage the apartment I live in. It is built using the D
 Its commands are tailored to access a spreadsheet of particular format. If modifying this, make sure to change the fields to match your spreadsheet.
 
 - `/ping` - Check if the bot is responsive.
-- `/date` - Returns the current date.
-- `/rentdues` - Returns a table containing the amount needed to pay for the current month's rent.
+- `/date` - Bot sends the current date.
+- `/rentdues` - Bot sends a table containing the amount needed to pay for the current month's rent
+- `/choreslist` - Bot sends a message that users can react to for a limited time. On a reaction, the bot will post an updated table of chores completed. 
 
 ## Jobs
 This Discord bot also performs scheduled jobs via the [node-cron](https://github.com/kelektiv/node-cron) package.
@@ -63,24 +64,29 @@ if (lastDay - today < 7) {
 }
 ```
 ---
-### Reading your spreadsheet
-The bot is linked to a Google Cloud service account that allows us to integrate Google Cloud APIs.
+### Interfacing with your spreadsheet
+The bot is linked to a Google Cloud service account that allows us to integrate Google Cloud APIs. How do you set this up?
+1. Create a project for your bot in the Google Cloud Console
+2. Go to APIs & Services >> Credentials >> Create Service Account
+3. With the the Service Account email, add it to your target spreadsheet
+4. Follow the Sheets API reference on how to use the Node.js library to make http requests
 
-1. TODO: Update Google api 
-    - ``
-3. The bot finds the amount due with a batch of get requests.
-    - You should make a `rent-table.js` that performs function `getRanges`.
-
-	```js
-	const getRanges = (paymentColumn) => {
-	 	return (
-			[`2023_Bills!${paymentColumn}7`, `2023_Bills!${paymentColumn}11`, `2023_Bills!${paymentColumn}19`, 
-			`2023_Bills!${paymentColumn}23`, `2023_Bills!${paymentColumn}27`, `2023_Bills!${paymentColumn}31`]
-		);
-	};
-	```
-    - The numbers after `${paymentColumn}` represent the row for each roommate.
-    - Use the same protocol in (1), but with these ranges.
+Example in the app
+```
+// Example Header
+const request = {
+    // The ID of the spreadsheet to retrieve data from.
+    spreadsheetId: process.env['SPREADSHEET_ID'],
+    // The A1 notation of the values to retrieve.
+    range: 'Leaderboards!A:A',
+    auth: jwtClient,
+  };
+ 
+ ...
+ 
+ // Using sheets api
+ await sheets.spreadsheets.values.get(request)).data
+```
 
 
 ## Set up
