@@ -16,6 +16,8 @@ This Discord bot also performs scheduled jobs via the [node-cron](https://github
 |----------|-------------|----------|
 |`rentReminder`| Messages the `GENERAL_CHANNEL` to pay rent. | Within 7 days of end of month, at 10:00 and 18:00 |
 
+## Events
+`messageCreate`- Anytime a user other than ApartmentBot messages the channel `GENERAL_CHANNEL`, there is a random chance ApartmentBot will reply to the message. The message itself is a randomly picked from a distribution of messages.
 
 ## Configuration
 This assumes that you have a Discord bot set up beforehand and a project on Google Cloud Console. I followed this [guide](https://www.freecodecamp.org/news/create-a-discord-bot-with-javascript-nodejs/). Its keys/ids are stored in an `.env` file.
