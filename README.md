@@ -1,5 +1,5 @@
 # ApartmentBot
-![image of apartmentbot](https://imgur.com/UCSRL0S)
+![image of apartmentbot](https://i.imgur.com/UCSRL0S.jpg)
 
 A discord bot that helps manage the apartment I live in. It is built using the Discord and Google APIs to transmit data from a spreadsheet to a discord server. It sends a reminder to the discord server when rent is due in a week or less.
 
